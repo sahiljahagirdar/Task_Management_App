@@ -31,3 +31,39 @@ def get_specific_task(task_id:int,db:Session):
             detail="Task Id is incorrect"
         )
     return {"Status":"Task fetched sucessfully","data":one_task}
+
+
+def update_task(body:Task_schema,task_id:int,db:Session):
+    one_task = db.query(TaskModel).get(task_id)
+    if not one_task:
+        raise HTTPException(
+            404,
+            detail = 'Task Id is Incorrect'
+        )
+    
+    body = body.model_dump()
+    for field,value in body.items():
+        setattr(one_task,field,value)
+
+    db.add(one_task)
+    db.commit()
+    db.refresh(one_task)
+    
+    return {"status":"Task updated sucessfully","Data":one_task}
+
+
+def delete_specific_task(task_id:int,db:Session):
+    one_task = db.query(TaskModel).get(task_id)
+    if not one_task:
+        raise HTTPException(
+            404,
+            detail='Task Id not found'
+        )
+    
+    db.delete(one_task)
+    db.commit()
+
+    return {
+        "status" : "task deleted sucessfully"
+    }
+

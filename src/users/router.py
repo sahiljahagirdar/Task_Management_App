@@ -19,8 +19,3 @@ def all_users(db=Depends(get_db)):
 @user_router.post('/login',status_code=status.HTTP_200_OK)
 def login(body:LoginSchema,db:session=Depends(get_db)):
     return controller.login_user(body,db)
-
-
-@user_router.get('/is_auth',response_model=ResponseModel,status_code=status.HTTP_200_OK)
-def is_auth(request:Request,db=Depends(get_db)):
-    return controller.is_authenticated(request,db)
